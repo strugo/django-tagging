@@ -6,6 +6,7 @@ import math
 import types
 
 from django.db.models.query import QuerySet
+from django.utils import six
 from django.utils.encoding import force_unicode
 from django.utils.translation import ugettext as _
 
@@ -164,14 +165,14 @@ def get_tag_list(tags):
         return [tags]
     elif isinstance(tags, QuerySet) and tags.model is Tag:
         return tags
-    elif isinstance(tags, types.StringTypes):
+    elif isinstance(tags, six.string_types):
         return Tag.objects.filter(name__in=parse_tag_input(tags))
     elif isinstance(tags, (types.ListType, types.TupleType)):
         if len(tags) == 0:
             return tags
         contents = set()
         for item in tags:
-            if isinstance(item, types.StringTypes):
+            if isinstance(item, six.string_types):
                 contents.add('string')
             elif isinstance(item, Tag):
                 contents.add('tag')
@@ -206,7 +207,7 @@ def get_tag(tag):
         return tag
 
     try:
-        if isinstance(tag, types.StringTypes):
+        if isinstance(tag, six.string_types):
             return Tag.objects.get(name=tag)
         elif isinstance(tag, (types.IntType, types.LongType)):
             return Tag.objects.get(id=tag)
