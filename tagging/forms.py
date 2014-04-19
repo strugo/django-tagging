@@ -13,6 +13,7 @@ from tagging.utils import parse_tag_input
 class TagAdminForm(forms.ModelForm):
     class Meta:
         model = Tag
+        fields = ['name']
 
     def clean_name(self):
         value = self.cleaned_data['name']
