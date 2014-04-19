@@ -1,6 +1,7 @@
 """
 Tagging related views.
 """
+from __future__ import unicode_literals
 from django.http import Http404
 from django.utils.translation import ugettext as _
 from django.views.generic.list_detail import object_list

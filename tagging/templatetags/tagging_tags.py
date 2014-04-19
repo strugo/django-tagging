@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 from django.db.models import get_model
 from django.template import Library, Node, TemplateSyntaxError, Variable, resolve_variable
 from django.utils.translation import ugettext as _

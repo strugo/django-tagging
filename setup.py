@@ -1,6 +1,7 @@
 """
 Based entirely on Django's own ``setup.py``.
 """
+from __future__ import unicode_literals
 import os
 from distutils.command.install import INSTALL_SCHEMES
 from distutils.core import setup

@@ -3,6 +3,8 @@ Convenience module for access of custom tagging application settings,
 which enforces default settings when the main settings module does not
 contain the appropriate settings.
 """
+from __future__ import unicode_literals
+
 from django.conf import settings
 
 # The maximum length of a tag's name.

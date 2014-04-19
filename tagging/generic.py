@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from django.contrib.contenttypes.models import ContentType
 
 def fetch_content_objects(tagged_items, select_related_for=None):

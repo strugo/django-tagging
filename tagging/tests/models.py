@@ -1,25 +1,31 @@
+from __future__ import unicode_literals
+
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 
 from tagging.fields import TagField
 
+@python_2_unicode_compatible
 class Perch(models.Model):
     size = models.IntegerField()
     smelly = models.BooleanField(default=True)
 
+@python_2_unicode_compatible
 class Parrot(models.Model):
     state = models.CharField(max_length=50)
     perch = models.ForeignKey(Perch, null=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.state
 
     class Meta:
         ordering = ['state']
 
+@python_2_unicode_compatible
 class Link(models.Model):
     name = models.CharField(max_length=50)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta:
@@ -28,7 +34,7 @@ class Link(models.Model):
 class Article(models.Model):
     name = models.CharField(max_length=50)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta:

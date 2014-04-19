@@ -2,6 +2,7 @@
 Tagging utilities - from user tag input parsing to tag cloud
 calculation.
 """
+from __future__ import unicode_literals
 import math
 import types
 
@@ -47,17 +48,17 @@ def parse_tag_input(input):
     i = iter(input)
     try:
         while 1:
-            c = i.next()
+            c = six.advance_iterator(i)
             if c == u'"':
                 if buffer:
                     to_be_split.append(u''.join(buffer))
                     buffer = []
                 # Find the matching quote
                 open_quote = True
-                c = i.next()
+                c = six.advance_iterator(i)
                 while c != u'"':
                     buffer.append(c)
-                    c = i.next()
+                    c = six.advance_iterator(i)
                 if buffer:
                     word = u''.join(buffer).strip()
                     if word:
@@ -167,7 +168,7 @@ def get_tag_list(tags):
         return tags
     elif isinstance(tags, six.string_types):
         return Tag.objects.filter(name__in=parse_tag_input(tags))
-    elif isinstance(tags, (types.ListType, types.TupleType)):
+    elif isinstance(tags, (list, tuple)):
         if len(tags) == 0:
             return tags
         contents = set()
@@ -176,7 +177,7 @@ def get_tag_list(tags):
                 contents.add('string')
             elif isinstance(item, Tag):
                 contents.add('tag')
-            elif isinstance(item, (types.IntType, types.LongType)):
+            elif isinstance(item, six.integer_types):
                 contents.add('int')
         if len(contents) == 1:
             if 'string' in contents:
@@ -209,7 +210,7 @@ def get_tag(tag):
     try:
         if isinstance(tag, six.string_types):
             return Tag.objects.get(name=tag)
-        elif isinstance(tag, (types.IntType, types.LongType)):
+        elif isinstance(tag, six.integer_types):
             return Tag.objects.get(id=tag)
     except Tag.DoesNotExist:
         pass
