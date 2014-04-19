@@ -5,7 +5,6 @@ from django.utils.encoding import python_2_unicode_compatible
 
 from tagging.fields import TagField
 
-@python_2_unicode_compatible
 class Perch(models.Model):
     size = models.IntegerField()
     smelly = models.BooleanField(default=True)
