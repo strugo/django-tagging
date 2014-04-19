@@ -2,11 +2,21 @@
 Django Tagging Changelog
 ========================
 
+
+Version 0.4, In development
+---------------------------
+
+* Added support for Python >= 3.3 and dropped support for Python < 2.6.
+* Added support for Django 1.6 and 1.7.
+* Added tox configuration for testing various combinations of Python and Django.
+
+
 Version 0.3.1, 22nd January 2010:
 ---------------------------------
 
 * Fixed Django 1.2 support (did not add anything new)
 * Fixed #95 — tagging.register won't stomp on model attributes
+
 
 Version 0.3.0, 22nd August 2009:
 --------------------------------
