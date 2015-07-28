@@ -107,7 +107,7 @@ def edit_string_for_tags(tags):
     it will be space-delimited.
     """
     names = []
-    use_commas = False
+    use_commas = settings.FORCE_COMMA_FOR_EDIT_TAGS_STRING
     for tag in tags:
         name = tag.name
         if ',' in name:
