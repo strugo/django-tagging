@@ -11,6 +11,8 @@ from django.utils import six
 from django.utils.encoding import force_text
 from django.utils.translation import ugettext as _
 
+from tagging import settings
+
 # Python 2.3 compatibility
 try:
     set
@@ -112,7 +114,7 @@ def edit_string_for_tags(tags):
     it will be space-delimited.
     """
     names = []
-    use_commas = False
+    use_commas = settings.FORCE_COMMA_FOR_EDIT_TAGS_STRING
     for tag in tags:
         name = tag.name
         if u',' in name:
