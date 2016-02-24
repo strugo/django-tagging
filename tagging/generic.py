@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 from django.contrib.contenttypes.models import ContentType
 
+
 def fetch_content_objects(tagged_items, select_related_for=None):
     """
     Retrieves ``ContentType`` and content objects for the given list of
@@ -17,7 +18,8 @@ def fetch_content_objects(tagged_items, select_related_for=None):
     ``ContentType``) for which ``select_related`` should be used when
     retrieving model instances.
     """
-    if select_related_for is None: select_related_for = []
+    if select_related_for is None:
+        select_related_for = []
 
     # Group content object pks by their content type pks
     objects = {}

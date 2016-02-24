@@ -11,7 +11,6 @@ except NameError:
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
 from django.db import connection, models
-from django.db.models.query import QuerySet
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
@@ -24,6 +23,7 @@ qn = connection.ops.quote_name
 ############
 # Managers #
 ############
+
 
 class TagManager(models.Manager):
     def update_tags(self, obj, tag_names):
@@ -38,7 +38,7 @@ class TagManager(models.Manager):
             updated_tag_names = [t.lower() for t in updated_tag_names]
 
         # Remove tags which no longer apply
-        tags_for_removal = [tag for tag in current_tags \
+        tags_for_removal = [tag for tag in current_tags
                             if tag.name not in updated_tag_names]
         if len(tags_for_removal):
             TaggedItem._default_manager.filter(content_type__pk=ctype.pk,
@@ -82,7 +82,8 @@ class TagManager(models.Manager):
         Perform the custom SQL query for ``usage_for_model`` and
         ``usage_for_queryset``.
         """
-        if min_count is not None: counts = True
+        if min_count is not None:
+            counts = True
 
         model_table = qn(model._meta.db_table)
         model_pk = '%s.%s' % (model_table, qn(model._meta.pk.column))
@@ -141,7 +142,8 @@ class TagManager(models.Manager):
         of field lookups to be applied to the given Model as the
         ``filters`` argument.
         """
-        if filters is None: filters = {}
+        if filters is None:
+            filters = {}
 
         queryset = model._default_manager.filter()
         for f in filters.items():
@@ -199,7 +201,8 @@ class TagManager(models.Manager):
         greater than or equal to ``min_count`` will be returned.
         Passing a value for ``min_count`` implies ``counts=True``.
         """
-        if min_count is not None: counts = True
+        if min_count is not None:
+            counts = True
         tags = get_tag_list(tags)
         tag_count = len(tags)
         tagged_item_table = qn(TaggedItem._meta.db_table)
@@ -272,6 +275,7 @@ class TagManager(models.Manager):
         tags = list(self.usage_for_model(model, counts=True, filters=filters,
                                          min_count=min_count))
         return calculate_cloud(tags, steps, distribution)
+
 
 class TaggedItemManager(models.Manager):
     """
@@ -450,14 +454,16 @@ class TaggedItemManager(models.Manager):
             # Use in_bulk here instead of an id__in lookup, because id__in would
             # clobber the ordering.
             object_dict = queryset.in_bulk(object_ids)
-            return [object_dict[object_id] for object_id in object_ids \
+            return [object_dict[object_id] for object_id in object_ids
                     if object_id in object_dict]
         else:
             return []
 
+
 ##########
 # Models #
 ##########
+
 
 @python_2_unicode_compatible
 class Tag(models.Model):
@@ -476,15 +482,16 @@ class Tag(models.Model):
     def __str__(self):
         return self.name
 
+
 @python_2_unicode_compatible
 class TaggedItem(models.Model):
     """
     Holds the relationship between a tag and the item being tagged.
     """
-    tag          = models.ForeignKey(Tag, verbose_name=_('tag'), related_name='items')
+    tag = models.ForeignKey(Tag, verbose_name=_('tag'), related_name='items')
     content_type = models.ForeignKey(ContentType, verbose_name=_('content type'))
-    object_id    = models.PositiveIntegerField(_('object id'), db_index=True)
-    object       = generic.GenericForeignKey('content_type', 'object_id')
+    object_id = models.PositiveIntegerField(_('object id'), db_index=True)
+    object = generic.GenericForeignKey('content_type', 'object_id')
 
     objects = TaggedItemManager()
 

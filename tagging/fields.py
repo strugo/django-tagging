@@ -11,6 +11,7 @@ from tagging import settings
 from tagging.models import Tag
 from tagging.utils import edit_string_for_tags
 
+
 class TagField(CharField):
     """
     A "special" character field that actually works as a relationship to tags
@@ -70,14 +71,14 @@ class TagField(CharField):
             value = value.lower()
         self._set_instance_tag_cache(instance, value)
 
-    def _save(self, **kwargs): #signal, sender, instance):
+    def _save(self, **kwargs):  # signal, sender, instance):
         """
         Save tags back to the database
         """
         tags = self._get_instance_tag_cache(kwargs['instance'])
         Tag.objects.update_tags(kwargs['instance'], tags)
 
-    def _update(self, **kwargs): #signal, sender, instance):
+    def _update(self, **kwargs):  # signal, sender, instance):
         """
         Update tag cache from TaggedItem objects.
         """
