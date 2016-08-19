@@ -46,10 +46,9 @@ class TagManager(models.Manager):
                 object_id=obj.pk,
                 tag__in=tags_for_removal).delete()
         # Add new tags
-        current_tag_names = [tag.name for tag in current_tags]
         for tag_name in updated_tag_names:
-            if tag_name not in current_tag_names:
-                tag, created = self.get_or_create(name=tag_name)
+            tag, created = self.get_or_create(name=tag_name)
+            if tag not in current_tags:
                 TaggedItem._default_manager.create(tag=tag, object=obj)
 
     def add_tag(self, obj, tag_name):
