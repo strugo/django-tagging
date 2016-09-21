@@ -33,23 +33,30 @@ class TagManager(models.Manager):
         ctype = ContentType.objects.get_for_model(obj)
         current_tags = list(self.filter(items__content_type__pk=ctype.pk,
                                         items__object_id=obj.pk))
-        updated_tag_names = parse_tag_input(tag_names)
+        new_tags = list()
+        adding_tags_names = parse_tag_input(tag_names)
         if settings.FORCE_LOWERCASE_TAGS:
-            updated_tag_names = [t.lower() for t in updated_tag_names]
+            adding_tags_names = [t.lower() for t in adding_tags_names]
+
+        # Add new tags
+        for tag_name in adding_tags_names:
+            try:
+                tag = self.get(name__iexact=tag_name)
+            except Tag.DoesNotExist:
+                tag = Tag(name=tag_name)
+                tag.save()
+            if tag not in current_tags and tag not in new_tags:
+                TaggedItem._default_manager.create(tag=tag, object=obj)
+            new_tags.append(tag)
 
         # Remove tags which no longer apply
-        tags_for_removal = [tag for tag in current_tags
-                            if tag.name not in updated_tag_names]
+        tags_for_removal = [t for t in current_tags
+                            if t not in new_tags]
         if len(tags_for_removal):
             TaggedItem._default_manager.filter(
                 content_type__pk=ctype.pk,
                 object_id=obj.pk,
                 tag__in=tags_for_removal).delete()
-        # Add new tags
-        for tag_name in updated_tag_names:
-            tag, created = self.get_or_create(name=tag_name)
-            if tag not in current_tags:
-                TaggedItem._default_manager.create(tag=tag, object=obj)
 
     def add_tag(self, obj, tag_name):
         """
