@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Models and managers for tagging.
 """
@@ -520,6 +521,12 @@ class TaggedItem(models.Model):
         'content_type', 'object_id')
 
     objects = TaggedItemManager()
+
+    is_published = models.BooleanField(default=False, blank=True, db_index=True)
+
+    # Это не время создания связи объеект - тег.
+    # Это время создания объекта, для сортировки.
+    created = models.DateTimeField(null=True, blank=True, db_index=True)
 
     class Meta:
         # Enforce unique tag association per object
