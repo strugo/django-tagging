@@ -1110,6 +1110,7 @@ class TestTagFieldInForms(TestCase):
         form = TestForm()
         self.assertEqual(form.fields['tags'].__class__.__name__, 'TagField')
 
+    @override_settings(FORCE_COMMA_FOR_EDIT_TAGS_STRING=False)
     def test_recreation_of_tag_list_string_representations(self):
         plain = Tag.objects.create(name='plain')
         spaces = Tag.objects.create(name='spa ces')
@@ -1143,7 +1144,10 @@ class TestTagFieldInForms(TestCase):
     def test_tag_get_from_model(self):
         FormTest.objects.create(tags='test3 test2 test1')
         FormTest.objects.create(tags='toto titi')
-        self.assertEquals(FormTest.tags, 'test1 test2 test3 titi toto')
+        with self.settings(FORCE_COMMA_FOR_EDIT_TAGS_STRING=False):
+            self.assertEquals(FormTest.tags, 'test1 test2 test3 titi toto')
+        with self.settings(FORCE_COMMA_FOR_EDIT_TAGS_STRING=True):
+            self.assertEquals(FormTest.tags, 'test1, test2, test3, titi, toto')
 
 
 #########
